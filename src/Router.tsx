@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
-import { Delivery } from './pages/Delivery'
+import { Delivery } from './pages/Delivery/Delivery'
 import { Checkout } from './pages/Checkout/Checkout'
 import { DefaltLayout } from './layouts/DefaultLayout'
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const MainCheckout = styled.div`
+export const MainCheckout = styled.form`
   display: flex;
   justify-content: space-around;
   margin-top: 10rem;
@@ -75,8 +75,9 @@ export const FormItens = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  align-items: center;
   padding: 0px;
-  gap: 16px;
+  gap: 1.2rem;
   max-width: 100%;
 `
 export const Inputs = styled.input`
@@ -88,6 +89,7 @@ export const Inputs = styled.input`
   background: #eeeded;
   border: 1px solid #e6e5e5;
   border-radius: 4px;
+  color: 1px solid ${(props) => (props ? 'red' : 'green')};
   /* Inside auto layout */
 `
 
@@ -119,27 +121,47 @@ export const AdressPay = styled.div`
 export const Radiopay = styled.div`
   margin-top: 32px;
   display: flex;
-  background-color: ${(props) => props.theme.button};
   justify-content: space-between;
   gap: 0.75rem;
   align-self: center;
 `
-export const ButtonPay = styled.button`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 16px;
-  gap: 12px;
-
-  width: 178.67px;
-  height: 51px;
-  background: #ebe5f9;
-  border: 1px solid #8047f8;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  flex: none;
-  order: 0;
-  flex-grow: 1;
+export const ButtonPay = styled.div`
+  input {
+    display: none;
+  }
+  .divida .checkbox:checked ~ div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: red;
+    padding: 16px;
+    gap: 12px;
+    width: 178.67px;
+    height: 51px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+    background: ${(props) => props.theme.button};
+    border: 1px solid ${(props) => props.theme.Purple};
+  }
+  .divida .checkbox:not(:checked) ~ div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: red;
+    padding: 16px;
+    gap: 12px;
+    width: 178.67px;
+    height: 51px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+    background: ${(props) => props.theme.button};
+  }
 `
 
 export const Carform = styled.div`
@@ -313,16 +335,17 @@ export const OrderLineTotal = styled.div`
   text-align: right;
   color: ${(props) => props.theme.Subtitle};
 `
-export const ButtonOrder = styled.div`
+export const ButtonOrder = styled.button`
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 12px 8px;
   gap: 4px;
-
+  border: none;
   width: 368px;
   height: 46px;
+  cursor: pointer;
 
   /* Brand / Yellow */
 
@@ -341,4 +364,24 @@ export const ButtonOrder = styled.div`
 
   color: ${(props) => props.theme.white};
   font-stretch: 100;
+`
+
+export const FormDelete = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 8px;
+  gap: 4px;
+  width: auto;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  background-color: ${(props) => props.theme['Purple-light']};
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 160%;
+
+  color: ${(props) => props.theme.Text};
 `

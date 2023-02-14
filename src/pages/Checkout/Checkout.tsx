@@ -18,6 +18,7 @@ import {
   ButtonPay,
   CarfItens,
   Carform,
+  FormDelete,
   FormItens,
   InputDivs,
   Inputs,
@@ -34,25 +35,51 @@ import {
   Radiopay,
 } from './styles'
 
-function onblurCep(ev: any) {
-  const { value } = ev.target
-  if (value.length !== 8) {
-    alert('O CEP precisa ter 8 números')
-  }
-  fetch(`https://viacep.com.br/ws/${value}/json/`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.erro) {
-        alert('Cep não encontrado ou errado')
-      }
+import { useForm } from 'react-hook-form'
 
-      console.log(data)
-    })
-}
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { useNavigate } from 'react-router-dom'
+
+const schema = yup
+  .object({
+    cep: yup.string().required(),
+    numero: yup.number().positive().integer().required(),
+  })
+  .required()
 
 export function Checkout() {
+  const { register, watch, setValue, reset, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+  })
+  const navigate = useNavigate()
+
+  function onblurCep(cep: string) {
+    const value = cep.replace(/[^0-9]/g, '')
+
+    fetch(`https://viacep.com.br/ws/${value}/json/`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(value)
+        setValue('rua', data.logradouro)
+        setValue('bairro', data.bairro)
+        setValue('Cidade', data.localidade)
+        setValue('estado', data.uf)
+      })
+      .catch((error) => {
+        console.log(error)
+        console.log('deu erro')
+      })
+  }
+
+  async function submit(data: {}) {
+    if (data) {
+      navigate('/delivery')
+    }
+  }
+
   return (
-    <MainCheckout>
+    <MainCheckout onSubmit={handleSubmit(submit)}>
       <AdressForm>
         <AdressItens>
           <div>
@@ -60,7 +87,6 @@ export function Checkout() {
               <MapPinLine size={22} weight="thin" color="#C47F17" />
               <h3>Endereço de Entrega</h3>
             </AdressTitle>
-
             <h4>Informe o endereço onde deseja receber seu pedido</h4>
           </div>
           <div>
@@ -68,32 +94,58 @@ export function Checkout() {
               <InputDivs>
                 <Inputs
                   type="text"
-                  id="cep"
-                  placeholder="Cep"
-                  onBlur={(ev) => onblurCep(ev)}
+                  {...register('cep')}
+                  placeholder="CEP"
+                  onBlur={() => {
+                    onblurCep(watch('cep'))
+                  }}
                 />
               </InputDivs>
               <InputDivs>
-                <Inputs type="text" id="rua" placeholder="Rua / Av." />
+                <Inputs
+                  type="text"
+                  {...register('rua')}
+                  placeholder="Rua / Av."
+                  disabled
+                />
               </InputDivs>
               <InputDivs>
                 <Inputs
                   type="text"
                   style={{ flexGrow: 1 }}
-                  id="numero"
+                  {...register('numero', { required: true })}
                   placeholder="Número"
                 />
                 <Inputs
                   type="text"
-                  id="complemento"
+                  {...register('complemento')}
                   placeholder="Complemento"
                 />
               </InputDivs>
               <InputDivs>
-                <Inputs type="text" id="bairro" placeholder="Bairro" />
-                <Inputs type="text" id="Cidade" placeholder="Cidade" />
-                <Inputs type="text" id="estado" placeholder="Estado" />
+                <Inputs
+                  type="text"
+                  {...register('bairro')}
+                  placeholder="Bairro"
+                  disabled
+                />
+                <Inputs
+                  type="text"
+                  {...register('Cidade')}
+                  placeholder="Cidade"
+                  disabled
+                />
+                <Inputs
+                  type="text"
+                  {...register('estado')}
+                  placeholder="Estado"
+                  disabled
+                />
               </InputDivs>
+              <FormDelete onClick={reset}>
+                <Trash size={16} color="#8047F8" />
+                Limpar endereço
+              </FormDelete>
             </FormItens>
           </div>
         </AdressItens>
@@ -107,16 +159,52 @@ export function Checkout() {
           </p>
           <Radiopay>
             <ButtonPay>
-              <CreditCard size={16} weight="thin" color="#8047F8" />
-              Cartão de crédito
+              <label htmlFor="cartao" className="divida">
+                <input
+                  {...register('pagamento')}
+                  type="radio"
+                  id="cartao"
+                  name="pagamento"
+                  value="credito"
+                  className="checkbox"
+                />
+                <div className="divida_item">
+                  <CreditCard size={16} weight="thin" color="#8047F8" />
+                  Cartão de Crédito{' '}
+                </div>
+              </label>
             </ButtonPay>
             <ButtonPay>
-              <Bank size={16} weight="thin" color="#8047F8" />
-              Cartão de débito
+              <label htmlFor="debito" className="divida">
+                <input
+                  {...register('pagamento')}
+                  type="radio"
+                  id="debito"
+                  name="pagamento"
+                  value="debito"
+                  className="checkbox"
+                />
+                <div className="divida_item">
+                  <Bank size={16} weight="thin" color="#8047F8" />
+                  Cartão de Débito{' '}
+                </div>
+              </label>
             </ButtonPay>
             <ButtonPay>
-              <Money size={16} weight="thin" color="#8047F8" />
-              Dinheiro
+              <label htmlFor="dinheiro" className="divida">
+                <input
+                  {...register('pagamento')}
+                  type="radio"
+                  id="dinheiro"
+                  name="pagamento"
+                  value="dinheiro"
+                  className="checkbox"
+                />
+                <div className="divida_item">
+                  <Money size={16} weight="thin" color="#8047F8" />
+                  Dinheiro
+                </div>
+              </label>
             </ButtonPay>
           </Radiopay>
         </AdressPay>
