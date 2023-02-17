@@ -11,7 +11,6 @@ export const MainContainer = styled.main`
 
   aside {
     height: 34rem;
-    background-image: url('Coffee_delivery/src/assets/homeBack.svg');
     background: blur(80px);
     display: flex;
     justify-content: space-between;
@@ -190,7 +189,7 @@ export const QtdButton = styled.button`
   border: none;
   background: none;
 `
-export const PriceContainer = styled.p`
+export const PriceContainer = styled.div`
   display: flex;
   align-items: center;
   font-family: 'Baloo 2';

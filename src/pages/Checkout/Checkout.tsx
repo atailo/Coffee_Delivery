@@ -16,8 +16,10 @@ import {
   AdressTitle,
   ButtonOrder,
   ButtonPay,
+  CarEmpt,
   CarfItens,
   Carform,
+  CarQtd,
   FormDelete,
   FormItens,
   InputDivs,
@@ -27,6 +29,8 @@ import {
   ItemCenterContent,
   ItemDelete,
   ItemQaunt,
+  ItemTotal,
+  LineTxtex,
   MainCheckout,
   OrderLine,
   OrderLineTotal,
@@ -40,6 +44,8 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { CoffeeCarContext } from '../../context/coffeeCar'
 
 const schema = yup
   .object({
@@ -49,6 +55,8 @@ const schema = yup
   .required()
 
 export function Checkout() {
+  const { carItens, altQtdItemCarlis, deleteCaritem } =
+    useContext(CoffeeCarContext)
   const { register, watch, setValue, reset, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   })
@@ -68,7 +76,6 @@ export function Checkout() {
       })
       .catch((error) => {
         console.log(error)
-        console.log('deu erro')
       })
   }
 
@@ -77,7 +84,7 @@ export function Checkout() {
       navigate('/delivery')
     }
   }
-
+  console.log(carItens)
   return (
     <MainCheckout onSubmit={handleSubmit(submit)}>
       <AdressForm>
@@ -212,79 +219,104 @@ export function Checkout() {
       <Carform>
         <CarfItens>
           <div>
+            {carItens.length === 0 && (
+              <CarEmpt>
+                Seu carrinho está vazio, <br /> adicione itens !
+              </CarEmpt>
+            )}
             <ItemCarGroup>
-              <ItemCar>
-                <div>
-                  <img src="src/assets/tradicional.svg" alt="" />
-                </div>
-                <ItemCenterContent>
+              {carItens.map((item) => (
+                <ItemCar key={item.id}>
                   <div>
-                    <div>
-                      <h3>Expresso Tradicional</h3>
-                    </div>
-                    <ItemQaunt>
-                      <section>
-                        <Minus weight="bold" color="#8047F8" />
-                        <p>1</p>
-                        <Plus weight="bold" color="#8047F8" />
-                      </section>
-                      <ItemDelete>
-                        <Trash size={16} color="#8047F8" />
-                        Remover
-                      </ItemDelete>
-                    </ItemQaunt>
+                    <img src={item.image} alt="" />
                   </div>
-                </ItemCenterContent>
-                <div>R$ 9,90</div>
-              </ItemCar>
-              <div>
-                <hr />
-              </div>
-            </ItemCarGroup>
-            <ItemCarGroup>
-              <ItemCar>
-                <div>
-                  <img src="src/assets/tradicional.svg" alt="" />
-                </div>
-                <ItemCenterContent>
-                  <div>
+                  <ItemCenterContent>
                     <div>
-                      <h3>Expresso Tradicional</h3>
+                      <div>
+                        <h3>{item.name}</h3>
+                      </div>
+                      <ItemQaunt>
+                        <section>
+                          <CarQtd
+                            onClick={() => {
+                              if (item.quantidade > 1)
+                                altQtdItemCarlis(
+                                  item.id as number,
+                                  item.quantidade - 1,
+                                )
+                            }}
+                          >
+                            <Minus weight="bold" color="#8047F8" />
+                          </CarQtd>
+                          <p>{item.quantidade}</p>
+                          <CarQtd
+                            onClick={() => {
+                              altQtdItemCarlis(
+                                item.id as number,
+                                item.quantidade + 1,
+                              )
+                            }}
+                          >
+                            <Plus weight="bold" color="#8047F8" />
+                          </CarQtd>
+                        </section>
+                        <ItemDelete
+                          onClick={() => {
+                            deleteCaritem(item.id as number)
+                          }}
+                        >
+                          <Trash size={16} color="#8047F8" />
+                          Remover
+                        </ItemDelete>
+                      </ItemQaunt>
                     </div>
-                    <ItemQaunt>
-                      <section>
-                        <Minus weight="bold" color="#8047F8" />
-                        <p>1</p>
-                        <Plus weight="bold" color="#8047F8" />
-                      </section>
-                      <ItemDelete>
-                        <Trash size={16} color="#8047F8" />
-                        Remover
-                      </ItemDelete>
-                    </ItemQaunt>
-                  </div>
-                </ItemCenterContent>
-                <div>R$ 9,90</div>
-              </ItemCar>
-              <div>
-                <hr />
-              </div>
+                  </ItemCenterContent>
+                  <ItemTotal>
+                    <p>R${(item.quantidade * item.price).toFixed(2)}</p>
+                  </ItemTotal>
+                </ItemCar>
+              ))}
             </ItemCarGroup>
           </div>
         </CarfItens>
+        <LineTxtex>
+          <hr />
+        </LineTxtex>
         <OrderResume>
           <OrderText>
+            <LineTxtex>
+              <hr />
+            </LineTxtex>
             <OrderLine>
               <p>Total de itens</p>
-              <p>R$ 29,70</p>
+              <p>
+                R${' '}
+                {carItens
+                  .reduce((acc, item) => acc + item.quantidade * item.price, 0)
+                  .toFixed(2)}
+              </p>
             </OrderLine>
             <OrderLine>
-              <p>Entrega</p>
-              <p>R$ 3,50</p>
+              <p>Entrega - (R$1,50 por item)</p>
+              <p>
+                R${' '}
+                {carItens
+                  .reduce((acc, item) => acc + item.quantidade * 1.5, 0)
+                  .toFixed(2)}
+              </p>
             </OrderLine>
             <OrderLineTotal>
               <p>Total</p>
-              <p>R$ 33,20</p>
+              <p>
+                R${' '}
+                {(
+                  carItens.reduce(
+                    (acc, item) => acc + item.quantidade * item.price,
+                    0,
+                  ) +
+                  carItens.reduce((acc, item) => acc + item.quantidade * 1.5, 0)
+                ).toFixed(2)}
+              </p>
             </OrderLineTotal>
           </OrderText>
           <ButtonOrder typeof="submit">confirmar pedido</ButtonOrder>

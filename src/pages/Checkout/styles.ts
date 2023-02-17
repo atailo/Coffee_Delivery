@@ -178,19 +178,39 @@ export const Carform = styled.div`
 `
 
 export const CarfItens = styled.div`
-  height: 50%;
+  display: flex;
+  overflow-y: scroll;
+  height: 70%;
+  align-items: center;
+
   section {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     padding: 8px;
-    gap: 0.5rem;
+    gap: 0.2rem;
     width: 72px;
-    height: 32px;
+    height: auto;
     background-color: ${(props) => props.theme.button};
     border-radius: 6px;
   }
+`
+
+export const CarEmpt = styled.div`
+  color: ${(props) => props.theme['Yellow-Dark']};
+  font-weight: 700;
+  line-height: 2;
+  width: 100%;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+  padding: 6rem;
+`
+export const ItemTotal = styled.div`
+  display: flex;
+  gap: 0.2rem;
 `
 export const ItemCar = styled.div`
   display: flex;
@@ -226,9 +246,6 @@ export const ItemCarGroup = styled.div`
   flex-direction: column;
   gap: 1rem;
   justify-content: center;
-  hr {
-    border: 1px solid #e6e5e5;
-  }
 `
 export const ItemCenterContent = styled.div`
   display: flex;
@@ -250,7 +267,6 @@ export const ItemQaunt = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px;
   gap: 8px;
   width: 10.7rem;
   height: 2rem;
@@ -289,17 +305,27 @@ export const OrderResume = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4rem;
+  gap: 2rem;
+  margin-top: 2rem;
 `
+
+export const LineTxtex = styled.div`
+  hr {
+    height: 1px;
+    width: 100%;
+    border: 1px solid ${(props) => props.theme.button};
+  }
+`
+
 export const OrderText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 0px;
   gap: 12px;
   width: 23rem;
   height: 5.75rem;
+  margin-top: -2rem;
   div {
     display: flex;
     flex-direction: row;
@@ -384,4 +410,11 @@ export const FormDelete = styled.button`
   line-height: 160%;
 
   color: ${(props) => props.theme.Text};
+`
+export const CarQtd = styled.button`
+  border: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  display: flex;
 `

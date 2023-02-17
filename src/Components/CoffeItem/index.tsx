@@ -1,4 +1,6 @@
 import { Minus, Plus, ShoppingCart } from 'phosphor-react'
+import { useContext, useState } from 'react'
+import { CoffeeCarContext, CoffeItem } from '../../context/coffeeCar'
 import {
   Carbutton,
   CoffeImage,
@@ -7,16 +9,9 @@ import {
   QtdButton,
 } from '../../pages/Home/styles'
 
-export interface CoffeItem {
-  id?: number
-  name: string
-  type: string[]
-  description: string
-  price: number
-  image: string
-}
-
 export function CoffeItemComponent(props: CoffeItem) {
+  const [qtd, setqtd] = useState(0)
+  const { addCar } = useContext(CoffeeCarContext)
   return (
     <>
       <CoffeImage>
@@ -38,15 +33,27 @@ export function CoffeItemComponent(props: CoffeItem) {
         </PriceContainer>
         <span>
           <section>
-            <QtdButton onClick={alert}>
+            <QtdButton
+              onClick={() => {
+                if (qtd > 0) setqtd(qtd - 1)
+              }}
+            >
               <Minus size={14} weight="bold" color="#8047F8" />
             </QtdButton>
-            <p>1</p>
-            <QtdButton>
+            <p>{qtd}</p>
+            <QtdButton
+              onClick={() => {
+                setqtd(qtd + 1)
+              }}
+            >
               <Plus size={14} weight="bold" color="#8047F8" />
             </QtdButton>
           </section>
-          <Carbutton>
+          <Carbutton
+            onClick={(e) => {
+              addCar(props.id as number, qtd)
+            }}
+          >
             <ShoppingCart size={19} weight="fill" />
           </Carbutton>
         </span>
