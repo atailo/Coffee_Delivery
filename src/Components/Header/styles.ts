@@ -15,6 +15,8 @@ export const HeaderContainer = styled.header`
     gap: 0.75rem;
     align-items: center;
     nav {
+      display: flex;
+      text-decoration: none;
       a {
         color: ${(props) => props.theme['Yellow-Dark']};
         background-color: ${(props) => props.theme['Yellow-Light']};
@@ -30,6 +32,7 @@ export const HeaderContainer = styled.header`
         }
       }
     }
+
     button {
       display: flex;
       flex-direction: row;
@@ -54,4 +57,22 @@ export const HeaderContainer = styled.header`
       }
     }
   }
+`
+
+export const CarNumberItens = styled.div`
+  text-decoration: none;
+  background-color: ${(props) => props.theme.Yellow};
+  border-radius: 50%;
+  margin-left: -0.5rem;
+  margin-top: -0.5rem;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  padding: 0.4rem;
+  color: ${(props) => props.theme.Title};
+  font-weight: 800;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `

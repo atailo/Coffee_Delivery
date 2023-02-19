@@ -55,7 +55,7 @@ const schema = yup
   .required()
 
 export function Checkout() {
-  const { carItens, altQtdItemCarlis, deleteCaritem } =
+  const { carItens, altQtdItemCarlis, deleteCaritem, addAdress, clearCar } =
     useContext(CoffeeCarContext)
   const { register, watch, setValue, reset, handleSubmit } = useForm({
     resolver: yupResolver(schema),
@@ -79,12 +79,24 @@ export function Checkout() {
       })
   }
 
-  async function submit(data: {}) {
-    if (data) {
+  async function submit(data: any) {
+    if (carItens.length > 0) {
+      console.log(data.rua)
       navigate('/delivery')
+      addAdress({
+        rua: data.rua,
+        numero: data.numero,
+        complemento: data.complemento,
+        bairro: data.bairro,
+        cidade: data.Cidade,
+        estado: data.estado,
+        pagamento: data.pagamento,
+      })
+      clearCar()
+    } else {
+      alert('data.error')
     }
   }
-  console.log(carItens)
   return (
     <MainCheckout onSubmit={handleSubmit(submit)}>
       <AdressForm>
@@ -149,7 +161,11 @@ export function Checkout() {
                   disabled
                 />
               </InputDivs>
-              <FormDelete onClick={reset}>
+              <FormDelete
+                onClick={() => {
+                  reset()
+                }}
+              >
                 <Trash size={16} color="#8047F8" />
                 Limpar endereço
               </FormDelete>
@@ -172,7 +188,7 @@ export function Checkout() {
                   type="radio"
                   id="cartao"
                   name="pagamento"
-                  value="credito"
+                  value="Cartão de Crédito"
                   className="checkbox"
                 />
                 <div className="divida_item">
@@ -188,7 +204,7 @@ export function Checkout() {
                   type="radio"
                   id="debito"
                   name="pagamento"
-                  value="debito"
+                  value="Cartão de Débito"
                   className="checkbox"
                 />
                 <div className="divida_item">
@@ -204,7 +220,7 @@ export function Checkout() {
                   type="radio"
                   id="dinheiro"
                   name="pagamento"
-                  value="dinheiro"
+                  value="Dinheiro"
                   className="checkbox"
                 />
                 <div className="divida_item">

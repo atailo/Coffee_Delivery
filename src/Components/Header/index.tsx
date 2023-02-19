@@ -1,9 +1,12 @@
-import { HeaderContainer } from './styles'
+import { CarNumberItens, HeaderContainer } from './styles'
 import { NavLink } from 'react-router-dom'
 import headerLogo from '../../assets/headerLogo.svg'
 import { MapPin, ShoppingCart } from 'phosphor-react'
+import { CoffeeCarContext } from '../../context/coffeeCar'
+import { useContext } from 'react'
 
 export function Header() {
+  const { carItens } = useContext(CoffeeCarContext)
   return (
     <HeaderContainer>
       <NavLink to="/" title="Clique para ir para pág. Inicial">
@@ -21,6 +24,7 @@ export function Header() {
           <NavLink to="/checkout" end title="Clique para ir para o carrinho">
             <ShoppingCart size={32} weight="fill" />
           </NavLink>
+          <CarNumberItens>{carItens.length}</CarNumberItens>
         </nav>
       </div>
     </HeaderContainer>

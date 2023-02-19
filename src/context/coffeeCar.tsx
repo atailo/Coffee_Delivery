@@ -9,12 +9,25 @@ export interface CoffeItem {
   image: string
 }
 
+export interface AdressItem {
+  rua: string
+  numero: number
+  complemento?: string
+  bairro: string
+  cidade: string
+  estado: string
+  pagamento: string
+}
+
 interface CoffeeCarContextInterface {
   CoffeList: CoffeItem[]
   addCar: (id: number, quantidade: number) => void
   altQtdItemCarlis: (id: number, quantidade: number) => void
   deleteCaritem: (id: number) => void
+  clearCar: () => void
   carItens: (CoffeItem & { quantidade: number })[]
+  adressItem: AdressItem
+  addAdress: (obj: AdressItem) => void
 }
 interface CoffeeCarContextProviderProps {
   children: ReactNode
@@ -152,13 +165,31 @@ export function CoffeeCarContextProvider({
     (CoffeItem & { quantidade: number })[]
   >([])
 
+  const [adressItem, setadressItem] = useState<AdressItem>({
+    rua: 'jovita',
+    numero: 44,
+    complemento: 'ap 10',
+    bairro: 'parquelandia',
+    cidade: 'fortaleza',
+    estado: 'CE',
+    pagamento: 'dinheiro',
+  })
+
+  function addAdress(props: AdressItem) {
+    setadressItem(props)
+  }
+
+  function clearCar() {
+    setcarItens([])
+  }
+
   const addCar = useCallback(
     (id: number, quantidade: number) => {
       const coffee = CoffeList.find((item) => {
         return item.id === id
       })
 
-      if (coffee) {
+      if (coffee && quantidade > 0) {
         // setcarItens([...carItens, { ...coffee, quantidade }])
         setcarItens((itens) => {
           const indexItem = itens.findIndex((item) => item.id === id)
@@ -171,6 +202,10 @@ export function CoffeeCarContextProvider({
           }
           return itens
         })
+      } else {
+        alert(
+          'escolha ao menos uma unidada do produto para colocar no carrinho',
+        )
       }
     },
     [CoffeList],
@@ -202,7 +237,16 @@ export function CoffeeCarContextProvider({
   )
   return (
     <CoffeeCarContext.Provider
-      value={{ CoffeList, addCar, carItens, altQtdItemCarlis, deleteCaritem }}
+      value={{
+        CoffeList,
+        addCar,
+        carItens,
+        clearCar,
+        altQtdItemCarlis,
+        deleteCaritem,
+        adressItem,
+        addAdress,
+      }}
     >
       {children}{' '}
     </CoffeeCarContext.Provider>

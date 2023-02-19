@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const MainOrder = styled.main`
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   margin-top: 10rem;
   align-items: center;
@@ -45,7 +46,18 @@ export const OrderItens = styled.div`
 `
 
 export const ImgOrder = styled.div`
-  margin-top: 6rem;
+  margin-top: 5rem;
   display: flex;
   align-items: flex-end;
+`
+
+export const PageOrder = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`
+export const ItensResume = styled.div`
+  background-color: ${(props) => props.theme['Purple-light']};
+  height: 10rem;
+  width: 70%;
+  border-radius: 6px;
 `
